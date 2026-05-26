@@ -1,0 +1,56 @@
+<form id="contact-form" action="#" method="POST">
+  <input type="text" name="name" placeholder="Your Name" required>
+  <input type="email" name="email" placeholder="Your Email" required>
+  <input type="text" name="subject" placeholder="Subject" required>
+  <textarea name="message" placeholder="Message" required></textarea>
+  <button type="submit">Send Message</button>
+  <div class="loading" style="display:none;">Loading...</div>
+  <div class="error-message" style="display:none;"></div>
+  <div class="sent-message" style="display:none;">Your message has been sent. Thank you!</div>
+</form>
+
+<script>
+const form = document.getElementById('contact-form');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const loading = form.querySelector('.loading');
+  const errorMessage = form.querySelector('.error-message');
+  const sentMessage = form.querySelector('.sent-message');
+
+  loading.style.display = 'block';
+  errorMessage.style.display = 'none';
+  sentMessage.style.display = 'none';
+
+  const data = {
+    name: form.name.value,
+    email: form.email.value,
+    subject: form.subject.value,
+    message: form.message.value
+  };
+
+  try {
+    const res = await fetch('http://localhost:5000/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+    loading.style.display = 'none';
+
+    if (res.ok) {
+      sentMessage.style.display = 'block';
+      form.reset();
+    } else {
+      errorMessage.style.display = 'block';
+      errorMessage.innerText = result.message || 'Something went wrong.';
+    }
+  } catch (err) {
+    loading.style.display = 'none';
+    errorMessage.style.display = 'block';
+    errorMessage.innerText = 'Could not connect to server.';
+  }
+});
+</script>
