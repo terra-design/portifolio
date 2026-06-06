@@ -65,6 +65,11 @@ body {
   background-color: var(--background-color);
   font-family: var(--default-font);
 }
+/* Global text justification for entire portfolio */
+p {
+  text-align: justify;
+  line-height: 1.8;
+}
 
 a {
   color: var(--accent-color);
